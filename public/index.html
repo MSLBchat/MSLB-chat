@@ -1,52 +1,347 @@
 <!DOCTYPE html>
- <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>MSLB CHAT</title>
-        </head>
-        <link rel="stylesheet" href="style.css">
- </head>
- <body>
- <div class="chat-container">
- <h2>Bienvenue sur MSLB CHAT</h2>
- <div id="messages"></div>
- <input type="text" id="messageInput"
- placeholder="Entrez votre message..." />
- [02/05 à 03:14
- ] BERVELI: <button
- id="sendBtn">Envoyer</button>
- </div>
- <script>
- <!-- Socket.io -->  <!-- Socket.io -->
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const sendBtn =
- document.getElementById('sendBtn');
-    const messageInput =
- document.getElementById('messageInput')
- ;
-    const messagesDiv =
- document.getElementById('messages');
-    // Écouteur bouton envoyer
-    sendBtn.addEventListener('click', () => {
-      const message =
- messageInput.value.trim();
-      if (message !== "") {
-        socket.emit('chatMessage', message);
-        messageInput.value = "";
-      }
-    });
-// Réception de message
- // Réception de message
- socket.on('chatMessage', (msg) => {
- const messageElement =
- document.createElement('p');
- messageElement.textContent = msg;
- messagesDiv.appendChild(messageElement);
- messagesDiv.scrollTop =
- messagesDiv.scrollHeight; // scroll auto
- });
-  </script>
- </body>
- </html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MSLB CHAT - Application Complète</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; background-color: #eceff1; color: #000; }
+section { display: none; padding: 20px; }
+.active { display: block; }
+button { margin: 10px; padding: 10px 20px; background: #25d366; color: white; border: none; border-radius: 5px; cursor: pointer; }
+button:hover { background: #128c7e; }
+input, textarea { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+header { background: #075e54; color: white; padding: 15px; display: flex; align-items: center; }
+header img { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; }
+header h2 { margin: 0; }
+.chat-container { margin: 20px auto; max-width: 500px; background: white; padding: 20px; border-radius: 8px; }
+#statuts p { background: #d9fdd3; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<!-- Page d'accueil -->
+<section id="welcome" class="active">
+  <div style="text-align:center; margin-top: 40vh;">
+    <h1>Bienvenue sur Mpounikina Samba Loubakissa Berveli Chat</h1>
+    <button onclick="showPage('main')">Entrer</button>
+  </div>
+</section>
+
+<!-- Page principale -->
+<section id="main">
+  <div style="text-align:center;">
+    <h1>Bienvenue sur MSLB CHAT</h1>
+    <p>Connectez-vous ou inscrivez-vous pour accéder aux discussions.</p>
+    <button onclick="connecter()">Connexion</button>
+    <button onclick="showPage('inscription')">Inscription</button>
+  </div>
+</section>
+
+<!-- Page d'inscription -->
+<section id="inscription">
+  <div style="text-align:center;">
+    <h2>Créer un compte</h2>
+    <input type="text" id="prenom" placeholder="Prénom"><br>
+    <input type="text" id="nom" placeholder="Nom"><br>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="text" id="pseudo" placeholder="Pseudo"><br>
+    <input type="password" id="password" placeholder="Mot de passe"><br>
+    <input type="url" id="photo" placeholder="Lien photo de profil"><br>
+    <button onclick="validerInscription()">S'inscrire</button>
+  </div>
+</section>
+
+<!-- Page de discussion -->
+<section id="discussion">
+  <header>
+    <img id="photoProfil" src="" alt="Photo de profil">
+    <h2 id="pseudoUser">Utilisateur</h2>
+  </header>
+  <div style="text-align:center;">
+    <button onclick="showPage('statuts')">Statuts</button>
+    <button onclick="showPage('parametres')">Paramètres</button>
+    <button onclick="showPage('main')">Déconnexion</button>
+  </div>
+  <div class="chat-container">
+    <h3>Zone de Discussion</h3>
+    <ul id="messages"></ul>
+    <input id="input" placeholder="Tapez un message...">
+    <button onclick="envoyer()">Envoyer</button>
+  </div>
+</section>
+
+<!-- Page des statuts -->
+<section id="statuts">
+  <div style="text-align:center;">
+    <h2>Vos Statuts</h2>
+    <div id="listeStatuts"></div>
+    <textarea id="nouveauStatut" placeholder="Exprimez-vous..."></textarea><br>
+    <button onclick="ajouterStatut()">Publier</button>
+    <br><button onclick="showPage('discussion')">Retour</button>
+  </div>
+</section>
+
+<!-- Page des paramètres -->
+<section id="parametres">
+  <div style="text-align:center;">
+    <h2>Modifier votre profil</h2>
+    <input type="text" id="newPseudo" placeholder="Nouveau pseudo"><br>
+    <input type="url" id="newPhoto" placeholder="Nouvelle photo de profil"><br>
+    <button onclick="modifierProfil()">Sauvegarder</button>
+    <br><button onclick="showPage('discussion')">Retour</button>
+  </div>
+</section>
+
+<script>
+function showPage(page) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+}
+
+function validerInscription() {
+  let prenom = document.getElementById('prenom').value;
+  let nom = document.getElementById('nom').value;
+  let email = document.getElementById('email').value;
+  let pseudo = document.getElementById('pseudo').value;
+  let password = document.getElementById('password').value;
+  let photo = document.getElementById('photo').value;
+  
+  if (prenom && nom && email && pseudo && password && photo) {
+    localStorage.setItem('pseudo', pseudo);
+    localStorage.setItem('photo', photo);
+    showDiscussion();
+  } else {
+    alert('Veuillez remplir tous les champs.');
+  }
+}
+
+function connecter() {
+  if (localStorage.getItem('pseudo') && localStorage.getItem('photo')) {
+    showDiscussion();
+  } else {
+    alert('Aucun compte trouvé. Veuillez vous inscrire.');
+  }
+}
+
+function showDiscussion() {
+  document.getElementById('pseudoUser').textContent = localStorage.getItem('pseudo');
+  document.getElementById('photoProfil').src = localStorage.getItem('photo');
+  showPage('discussion');
+}
+
+function envoyer() {
+  let msg = document.getElementById('input').value;
+  if (msg) {
+    document.getElementById('messages').innerHTML += `<li>${msg}</li>`;
+    document.getElementById('input').value = '';
+  }
+}
+
+function ajouterStatut() {
+  let nouveau = document.getElementById('nouveauStatut').value;
+  let statuts = JSON.parse(localStorage.getItem('statuts')) || [];
+  if (nouveau) {
+    statuts.unshift(nouveau);
+    localStorage.setItem('statuts', JSON.stringify(statuts));
+    document.getElementById('nouveauStatut').value = '';
+    afficherStatuts();
+  }
+}
+
+function afficherStatuts() {
+  let statuts = JSON.parse(localStorage.getItem('statuts')) || [];
+  document.getElementById('listeStatuts').innerHTML = statuts.map(s => `<p>${s}</p>`).join('');
+}
+
+function modifierProfil() {
+  let p = document.getElementById('newPseudo').value;
+  let ph = document.getElementById('newPhoto').value;
+  if (p && ph) {
+    localStorage.setItem('pseudo', p);
+    localStorage.setItem('photo', ph);
+    alert('Profil mis à jour');
+    showDiscussion();
+  } else {
+    alert('Veuillez remplir tous les champs.');
+  }
+}
+
+afficherStatuts();
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MSLB CHAT - Application Complète</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; background-color: #eceff1; color: #000; }
+section { display: none; padding: 20px; }
+.active { display: block; }
+button { margin: 10px; padding: 10px 20px; background: #25d366; color: white; border: none; border-radius: 5px; cursor: pointer; }
+button:hover { background: #128c7e; }
+input, textarea { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+header { background: #075e54; color: white; padding: 15px; display: flex; align-items: center; }
+header img { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; }
+header h2 { margin: 0; }
+.chat-container { margin: 20px auto; max-width: 500px; background: white; padding: 20px; border-radius: 8px; }
+#statuts p { background: #d9fdd3; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<!-- Page d'accueil -->
+<section id="welcome" class="active">
+  <div style="text-align:center; margin-top: 40vh;">
+    <h1>Bienvenue sur Mpounikina Samba Loubakissa Berveli Chat</h1>
+    <button onclick="showPage('main')">Entrer</button>
+  </div>
+</section>
+
+<!-- Page principale -->
+<section id="main">
+  <div style="text-align:center;">
+    <h1>Bienvenue sur MSLB CHAT</h1>
+    <p>Connectez-vous ou inscrivez-vous pour accéder aux discussions.</p>
+    <button onclick="connecter()">Connexion</button>
+    <button onclick="showPage('inscription')">Inscription</button>
+  </div>
+</section>
+
+<!-- Page d'inscription -->
+<section id="inscription">
+  <div style="text-align:center;">
+    <h2>Créer un compte</h2>
+    <input type="text" id="prenom" placeholder="Prénom"><br>
+    <input type="text" id="nom" placeholder="Nom"><br>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="text" id="pseudo" placeholder="Pseudo"><br>
+    <input type="password" id="password" placeholder="Mot de passe"><br>
+    <input type="url" id="photo" placeholder="Lien photo de profil"><br>
+    <button onclick="validerInscription()">S'inscrire</button>
+  </div>
+</section>
+
+<!-- Page de discussion -->
+<section id="discussion">
+  <header>
+    <img id="photoProfil" src="" alt="Photo de profil">
+    <h2 id="pseudoUser">Utilisateur</h2>
+  </header>
+  <div style="text-align:center;">
+    <button onclick="showPage('statuts')">Statuts</button>
+    <button onclick="showPage('parametres')">Paramètres</button>
+    <button onclick="showPage('main')">Déconnexion</button>
+  </div>
+  <div class="chat-container">
+    <h3>Zone de Discussion</h3>
+    <ul id="messages"></ul>
+    <input id="input" placeholder="Tapez un message...">
+    <button onclick="envoyer()">Envoyer</button>
+  </div>
+</section>
+
+<!-- Page des statuts -->
+<section id="statuts">
+  <div style="text-align:center;">
+    <h2>Vos Statuts</h2>
+    <div id="listeStatuts"></div>
+    <textarea id="nouveauStatut" placeholder="Exprimez-vous..."></textarea><br>
+    <button onclick="ajouterStatut()">Publier</button>
+    <br><button onclick="showPage('discussion')">Retour</button>
+  </div>
+</section>
+
+<!-- Page des paramètres -->
+<section id="parametres">
+  <div style="text-align:center;">
+    <h2>Modifier votre profil</h2>
+    <input type="text" id="newPseudo" placeholder="Nouveau pseudo"><br>
+    <input type="url" id="newPhoto" placeholder="Nouvelle photo de profil"><br>
+    <button onclick="modifierProfil()">Sauvegarder</button>
+    <br><button onclick="showPage('discussion')">Retour</button>
+  </div>
+</section>
+
+<script>
+function showPage(page) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+}
+
+function validerInscription() {
+  let prenom = document.getElementById('prenom').value;
+  let nom = document.getElementById('nom').value;
+  let email = document.getElementById('email').value;
+  let pseudo = document.getElementById('pseudo').value;
+  let password = document.getElementById('password').value;
+  let photo = document.getElementById('photo').value;
+  
+  if (prenom && nom && email && pseudo && password && photo) {
+    localStorage.setItem('pseudo', pseudo);
+    localStorage.setItem('photo', photo);
+    showDiscussion();
+  } else {
+    alert('Veuillez remplir tous les champs.');
+  }
+}
+
+function connecter() {
+  if (localStorage.getItem('pseudo') && localStorage.getItem('photo')) {
+    showDiscussion();
+  } else {
+    alert('Aucun compte trouvé. Veuillez vous inscrire.');
+  }
+}
+
+function showDiscussion() {
+  document.getElementById('pseudoUser').textContent = localStorage.getItem('pseudo');
+  document.getElementById('photoProfil').src = localStorage.getItem('photo');
+  showPage('discussion');
+}
+
+function envoyer() {
+  let msg = document.getElementById('input').value;
+  if (msg) {
+    document.getElementById('messages').innerHTML += `<li>${msg}</li>`;
+    document.getElementById('input').value = '';
+  }
+}
+
+function ajouterStatut() {
+  let nouveau = document.getElementById('nouveauStatut').value;
+  let statuts = JSON.parse(localStorage.getItem('statuts')) || [];
+  if (nouveau) {
+    statuts.unshift(nouveau);
+    localStorage.setItem('statuts', JSON.stringify(statuts));
+    document.getElementById('nouveauStatut').value = '';
+    afficherStatuts();
+  }
+}
+
+function afficherStatuts() {
+  let statuts = JSON.parse(localStorage.getItem('statuts')) || [];
+  document.getElementById('listeStatuts').innerHTML = statuts.map(s => `<p>${s}</p>`).join('');
+}
+
+function modifierProfil() {
+  let p = document.getElementById('newPseudo').value;
+  let ph = document.getElementById('newPhoto').value;
+  if (p && ph) {
+    localStorage.setItem('pseudo', p);
+    localStorage.setItem('photo', ph);
+    alert('Profil mis à jour');
+    showDiscussion();
+  } else {
+    alert('Veuillez remplir tous les champs.');
+  }
+}
+
+afficherStatuts();
+</script>
+
+</body>
+</html>
