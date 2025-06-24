@@ -1,46 +1,195 @@
 <!DOCTYPE html>
-<html lang=
-"fr">
+<html lang="fr">
 <head>
-<meta charset=
-"UTF-8">
-<title>MSLB CHAT</title>
-<link rel=
-"stylesheet" href=
-"style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MSLB CHAT - Bienvenue</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #eceff1;
+    color: #000;
+  }
+
+  /* Style page accueil */
+  #welcome-page {
+    background-color: #075e54;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  #welcome-page h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+  }
+  #welcome-page button {
+    background-color: #25d366;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  #welcome-page button:hover {
+    background-color: #128c7e;
+  }
+
+  /* Style page principale */
+  #main-page {
+    display: none;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  header {
+    background-color: #075e54;
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 10px 0;
+  }
+  .container {
+    text-align: center;
+  }
+  .buttons {
+    margin: 20px 0;
+  }
+  .buttons button {
+    background-color: #25d366;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .buttons button:hover {
+    background-color: #128c7e;
+  }
+  .newsletter input {
+    padding: 10px;
+    width: 250px;
+    margin-top: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .newsletter button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #25d366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .chat-container {
+    margin: 30px auto;
+    max-width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+  }
+  footer p {
+    margin: 5px 0;
+  }
+</style>
 </head>
 <body>
-<div class=
-"chat-container">
-<h2>MSLB CHAT</h2>
-<div id=
-"login">
-<input id=
-"username"
-placeholder=
-"Entrez votre pseudo..." />
-<button id=
-"join">Rejoindre</button>
+
+<!-- Page d'accueil -->
+<div id="welcome-page">
+  <h1>Bienvenue sur Mpounikina Samba Loubakissa Berveli Chat</h1>
+  <button id="enter-btn">Entrer</button>
 </div>
-<div id=
-"chat" style=
-"display:none;">
-<ul id=
-"messages"></ul>
-<form id=
-"form" autocomplete=
-"off">
-<input id=
-"input"
-placeholder=
-"Tapez un message..." />
-<button>Envoyer</button>
-</form>
-</form>
+
+<!-- Page principale (chat + boutons) -->
+<div id="main-page">
+  <header>
+    <h1>Bienvenue sur MSLB CHAT</h1>
+    <p>Votre réseau social pour rester connecté partout.</p>
+  </header>
+
+  <div class="container">
+    <div class="buttons">
+      <button onclick="alert('Connexion')">Connexion</button>
+      <button onclick="alert('Inscription')">Inscription</button>
+      <button onclick="partager()">Partager le site</button>
+    </div>
+
+    <div class="newsletter">
+      <h3>Abonnez-vous à notre newsletter</h3>
+      <input type="email" placeholder="Votre adresse email" />
+      <button onclick="alert('Merci pour votre inscription')">S'abonner</button>
+    </div>
+
+    <div class="chat-container">
+      <h2>Zone de Discussion</h2>
+      <div id="login">
+        <input id="username" placeholder="Entrez votre pseudo..." />
+        <button id="join">Rejoindre</button>
+      </div>
+      <div id="chat" style="display:none;">
+        <ul id="messages"></ul>
+        <form id="form" autocomplete="off">
+          <input id="input" placeholder="Tapez un message..." />
+          <button>Envoyer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Email : loubakissab@gmail.com</p>
+    <p>Adresse : 38 rue Makalamba</p>
+    <p>Téléphone : +242 068 591 291</p>
+    <p>© 2024 MSLB CHAT. Tous droits réservés.</p>
+  </footer>
 </div>
-</div>
-<script src=
-"/socket.io/socket.io.js"></script>
+
+<script src="/socket.io/socket.io.js"></script>
 <script src="client.js"></script>
+<script>
+  const enterBtn = document.getElementById('enter-btn');
+  const welcomePage = document.getElementById('welcome-page');
+  const mainPage = document.getElementById('main-page');
+
+  enterBtn.addEventListener('click', () => {
+    welcomePage.style.display = 'none';
+    mainPage.style.display = 'block';
+  });
+
+  function partager() {
+    const lien = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: 'MSLB CHAT',
+        text: 'Découvrez notre réseau social :',
+        url: lien
+      }).catch((error) => console.log('Erreur de partage', error));
+    } else {
+      prompt("Copiez ce lien pour le partager :", lien);
+    }
+  }
+</script>
+
 </body>
 </html>
