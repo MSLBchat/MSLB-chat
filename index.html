@@ -1,194 +1,222 @@
-<!DOCTYPE html>
+
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MSLB CHAT - Bienvenue</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MSLB CHAT - Application Complète</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #eceff1;
-    color: #000;
-  }
-
-  /* Style page accueil */
-  #welcome-page {
-    background-color: #075e54;
-    color: white;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  #welcome-page h1 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-  }
-  #welcome-page button {
-    background-color: #25d366;
-    border: none;
-    color: white;
-    padding: 15px 30px;
-    font-size: 1.2em;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  #welcome-page button:hover {
-    background-color: #128c7e;
-  }
-
-  /* Style page principale */
-  #main-page {
-    display: none;
-    padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  header {
-    background-color: #075e54;
-    color: white;
-    padding: 15px;
-    text-align: center;
-  }
-  header h1 {
-    margin: 10px 0;
-  }
-  .container {
-    text-align: center;
-  }
-  .buttons {
-    margin: 20px 0;
-  }
-  .buttons button {
-    background-color: #25d366;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    margin: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  .buttons button:hover {
-    background-color: #128c7e;
-  }
-  .newsletter input {
-    padding: 10px;
-    width: 250px;
-    margin-top: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  .newsletter button {
-    padding: 10px 20px;
-    margin-left: 10px;
-    background-color: #25d366;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .chat-container {
-    margin: 30px auto;
-    max-width: 400px;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-  footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: 30px;
-  }
-  footer p {
-    margin: 5px 0;
-  }
+body { font-family: Arial, sans-serif; margin: 0; background-color: #eceff1; color: #000; }
+section { display: none; height: 100vh; }
+.active { display: block; }
+button { margin: 5px; padding: 10px 15px; background: linear-gradient(45deg, #25d366, #128c7e); color: white; border: none; border-radius: 5px; cursor: pointer; }
+button:hover { background: linear-gradient(45deg, #128c7e, #075e54); }
+input, textarea { width: 85%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+header { background: linear-gradient(90deg, #25d366, #128c7e); color: white; padding: 10px; display: flex; align-items: center; justify-content: space-between; }
+header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
+header h2 { margin: 0; flex: 1; }
+.nav-buttons { display: flex; align-items: center; gap: 5px; }
+.menu { text-align: center; margin-top: 20vh; }
+.chat-container { display: flex; flex-direction: column; height: 100%; background: #e6f7ff; }
+#messages { flex: 1; overflow-y: auto; list-style: none; padding: 10px; margin: 0; display: flex; flex-direction: column; background: #f1f8ff; }
+#messages li { background: #d9fdd3; padding: 8px; margin: 5px; border-radius: 10px; max-width: 70%; word-wrap: break-word; }
+#messages li.sent { background: #dcf8c6; align-self: flex-end; }
+#messages li.received { background: #fff; align-self: flex-start; }
+.barre-saisie { display: flex; align-items: center; padding: 10px; background: #fff; border-top: 1px solid #ccc; }
+.barre-saisie button { margin: 0 5px; padding: 5px; }
+.barre-saisie input { flex: 1; margin: 0 5px; height: 30px; }
 </style>
 </head>
 <body>
 
 <!-- Page d'accueil -->
-<div id="welcome-page">
-  <h1>Bienvenue sur Mpounikina Samba Loubakissa Berveli Chat</h1>
-  <button id="enter-btn">Entrer</button>
-</div>
+<section id="welcome" class="active">
+  <div style="text-align:center; margin-top: 40vh;">
+    <h1>Bienvenue sur Mpounikina Samba Loubakissa Berveli Chat</h1>
+    <button onclick="showPage('main')">Entrer</button>
+  </div>
+</section>
 
-<!-- Page principale (chat + boutons) -->
-<div id="main-page">
-  <header>
+<!-- Page principale -->
+<section id="main">
+  <div style="text-align:center;">
     <h1>Bienvenue sur MSLB CHAT</h1>
-    <p>Votre réseau social pour rester connecté partout.</p>
+    <p>Connectez-vous ou inscrivez-vous pour accéder au menu principal.</p>
+    <button onclick="connecter()">Connexion</button>
+    <button onclick="showPage('inscription')">Inscription</button>
+  </div>
+</section>
+
+<!-- Page d'inscription -->
+<section id="inscription">
+  <div style="text-align:center;">
+    <h2>Créer un compte</h2>
+    <input type="text" id="prenom" placeholder="Prénom"><br>
+    <input type="text" id="nom" placeholder="Nom"><br>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="text" id="pseudo" placeholder="Pseudo"><br>
+    <input type="password" id="password" placeholder="Mot de passe"><br>
+    <input type="file" id="photo" accept="image/*" capture="environment"><br>
+    <button onclick="validerInscription()">S'inscrire</button>
+  </div>
+</section>
+
+<!-- Menu principal -->
+<section id="menu">
+  <div class="menu">
+    <h2>Menu Principal</h2>
+    <button onclick="showPage('statuts')">Statuts</button>
+    <button onclick="showPage('parametres')">Paramètres</button>
+    <button onclick="showPage('discussion')">Discussions</button>
+    <button onclick="alert('Appels non encore disponibles')">Appels</button>
+    <button onclick="alert('Accès aux contacts non encore disponible')">Contacts</button>
+    <button onclick="deconnexion()">Déconnexion</button>
+  </div>
+</section>
+
+<!-- Page de discussion -->
+<section id="discussion">
+  <header>
+    <div style="display: flex; align-items: center;">
+      <img id="photoProfil" src="" alt="Photo de profil">
+      <h2 id="pseudoUser">Utilisateur</h2>
+    </div>
+    <button onclick="showPage('menu')">Retour</button>
   </header>
 
-  <div class="container">
-    <div class="buttons">
-      <button onclick="alert('Connexion')">Connexion</button>
-      <button onclick="alert('Inscription')">Inscription</button>
-      <button onclick="partager()">Partager le site</button>
-    </div>
-
-    <div class="newsletter">
-      <h3>Abonnez-vous à notre newsletter</h3>
-      <input type="email" placeholder="Votre adresse email" />
-      <button onclick="alert('Merci pour votre inscription')">S'abonner</button>
-    </div>
-
-    <div class="chat-container">
-      <h2>Zone de Discussion</h2>
-      <div id="login">
-        <input id="username" placeholder="Entrez votre pseudo..." />
-        <button id="join">Rejoindre</button>
-      </div>
-      <div id="chat" style="display:none;">
-        <ul id="messages"></ul>
-        <form id="form" autocomplete="off">
-          <input id="input" placeholder="Tapez un message..." />
-          <button>Envoyer</button>
-        </form>
-      </div>
+  <div class="chat-container">
+    <ul id="messages"></ul>
+    <div class="barre-saisie">
+      <button onclick="ouvrirEmojiPicker()">😀</button>
+      <button onclick="ouvrirCamera()">📷</button>
+      <input id="input" placeholder="Tapez un message...">
+      <button onclick="envoyer()">Envoyer</button>
+      <button onclick="enregistrerMessageVocal()">🎤</button>
     </div>
   </div>
+</section>
 
-  <footer>
-    <p>Email : loubakissab@gmail.com</p>
-    <p>Adresse : 38 rue Makalamba</p>
-    <p>Téléphone : +242 068 591 291</p>
-    <p>© 2024 MSLB CHAT. Tous droits réservés.</p>
-  </footer>
-</div>
+<!-- Page des statuts -->
+<section id="statuts">
+  <div style="text-align:center;">
+    <h2>Vos Statuts</h2>
+    <div id="listeStatuts"></div>
+    <textarea id="nouveauStatut" placeholder="Exprimez-vous..."></textarea><br>
+    <button onclick="ajouterStatut()">Publier</button>
+    <br><button onclick="showPage('menu')">Retour</button>
+  </div>
+</section>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="client.js"></script>
+<!-- Page des paramètres -->
+<section id="parametres">
+  <div style="text-align:center;">
+    <h2>Modifier votre profil</h2>
+    <input type="text" id="newPseudo" placeholder="Nouveau pseudo"><br>
+    <input type="file" id="newPhoto" accept="image/*" capture="environment"><br>
+    <button onclick="modifierProfil()">Sauvegarder</button>
+    <br><button onclick="showPage('menu')">Retour</button>
+  </div>
+</section>
+
 <script>
-  const enterBtn = document.getElementById('enter-btn');
-  const welcomePage = document.getElementById('welcome-page');
-  const mainPage = document.getElementById('main-page');
+function showPage(page) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+}
 
-  enterBtn.addEventListener('click', () => {
-    welcomePage.style.display = 'none';
-    mainPage.style.display = 'block';
-  });
+function validerInscription() {
+  let prenom = document.getElementById('prenom').value;
+  let nom = document.getElementById('nom').value;
+  let email = document.getElementById('email').value;
+  let pseudo = document.getElementById('pseudo').value;
+  let password = document.getElementById('password').value;
+  let photoInput = document.getElementById('photo');
 
-  function partager() {
-    const lien = window.location.href;
-    if (navigator.share) {
-      navigator.share({
-        title: 'MSLB CHAT',
-        text: 'Découvrez notre réseau social :',
-        url: lien
-      }).catch((error) => console.log('Erreur de partage', error));
-    } else {
-      prompt("Copiez ce lien pour le partager :", lien);
-    }
+  if (prenom && nom && email && pseudo && password && photoInput.files[0]) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      localStorage.setItem('pseudo', pseudo);
+      localStorage.setItem('photo', e.target.result);
+      showPage('menu');
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+  } else {
+    alert('Veuillez remplir tous les champs et choisir une photo.');
   }
+}
+
+function connecter() {
+  if (localStorage.getItem('pseudo') && localStorage.getItem('photo')) {
+    showPage('menu');
+  } else {
+    alert('Aucun compte trouvé. Veuillez vous inscrire.');
+  }
+}
+
+function showDiscussion() {
+  document.getElementById('pseudoUser').textContent = localStorage.getItem('pseudo');
+  document.getElementById('photoProfil').src = localStorage.getItem('photo');
+  showPage('discussion');
+}
+
+function envoyer() {
+  let msg = document.getElementById('input').value;
+  if (msg) {
+    let li = document.createElement('li');
+    li.textContent = msg;
+    li.classList.add('sent');
+    document.getElementById('messages').appendChild(li);
+    document.getElementById('input').value = '';
+  }
+}
+
+function ajouterStatut() {
+  let nouveau = document.getElementById('nouveauStatut').value;
+  let statuts = JSON.parse(localStorage.getItem('statuts')) || [];
+  if (nouveau) {
+    statuts.unshift(nouveau);
+    localStorage.setItem('statuts', JSON.stringify(statuts));
+    document.getElementById('nouveauStatut').value = '';
+    afficherStatuts();
+  }
+}
+
+function afficherStatuts() {
+  let statuts = JSON.parse(localStorage.getItem('statuts')) || [];
+  document.getElementById('listeStatuts').innerHTML = statuts.map(s => `<p>${s}</p>`).join('');
+}
+
+function modifierProfil() {
+  let p = document.getElementById('newPseudo').value;
+  let photoInput = document.getElementById('newPhoto');
+  if (p && photoInput.files[0]) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      localStorage.setItem('pseudo', p);
+      localStorage.setItem('photo', e.target.result);
+      alert('Profil mis à jour');
+      showPage('menu');
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+  } else {
+    alert('Veuillez remplir tous les champs et choisir une nouvelle photo.');
+  }
+}
+
+function enregistrerMessageVocal() {
+  alert('Enregistrement message vocal (simulation)');
+}
+function ouvrirEmojiPicker() {
+  alert('Ouverture du sélecteur d\'emoji (simulation)');
+}
+function ouvrirCamera() {
+  alert('Ouverture de la caméra (simulation)');
+}
+function deconnexion() {
+  localStorage.clear();
+  showPage('main');
+}
+afficherStatuts();
 </script>
 
 </body>
